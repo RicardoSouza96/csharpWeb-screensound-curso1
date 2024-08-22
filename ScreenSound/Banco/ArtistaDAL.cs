@@ -1,9 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using ScreenSound.Modelos;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace ScreenSound.Banco;
@@ -13,7 +15,7 @@ internal class ArtistaDAL
     public IEnumerable<Artista> Listar()
     {
         var lista = new List<Artista>();
-        using var connection = new Connection().ObterConexao();
+        using var connection = new ScreenSoundContext().ObterConexao();
         connection.Open();
 
         string sql = "SELECT * FROM Artistas";
@@ -35,7 +37,7 @@ internal class ArtistaDAL
 
     public void Adicionar(Artista artista)
     {
-        using var connection = new Connection().ObterConexao();
+        using var connection = new ScreenSoundContext().ObterConexao();
         connection.Open();
 
         string sql = "INSERT INTO Artistas (Nome, FotoPerfil, Bio) VALUES (@nome, @perfilPadrao, @bio)";
@@ -44,6 +46,37 @@ internal class ArtistaDAL
         command.Parameters.AddWithValue("@nome", artista.Nome);
         command.Parameters.AddWithValue("@perfilPadrao", artista.FotoPerfil);
         command.Parameters.AddWithValue("@bio", artista.Bio);
+
+        int retorno = command.ExecuteNonQuery();
+        Console.WriteLine($"Linhas afetadas: {retorno}");
+    }
+
+    public void Atualizar(Artista artista)
+    {
+        using var connection = new ScreenSoundContext().ObterConexao();
+        connection.Open();
+
+        string sql = "UPDATE Artistas SET Nome = @nome, Bio = @bio WHERE Id = @id";
+        SqlCommand command = new SqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("@nome", artista.Nome);
+        command.Parameters.AddWithValue("@bio", artista.Bio);
+        command.Parameters.AddWithValue("@id", artista.Id);
+
+        int retorno = command.ExecuteNonQuery();
+
+        Console.WriteLine($"Linhas afetadas: {retorno}");
+    }
+
+    public void Deletar(Artista artista)
+    {
+        using var connection = new ScreenSoundContext().ObterConexao();
+        connection.Open();
+
+        string sql = $"DELETE FROM Artistas WHERE Id = @id";
+        SqlCommand command = new SqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("@id", artista.Id);
 
         int retorno = command.ExecuteNonQuery();
         Console.WriteLine($"Linhas afetadas: {retorno}");
