@@ -11,31 +11,5 @@ internal class MusicaDAL : DAL<Musica>
 {
     private readonly ScreenSoundContext context;
 
-    public MusicaDAL(ScreenSoundContext context)
-    {
-        this.context = context;
-    }
-
-    public override IEnumerable<Musica> Listar()
-    {
-        return context.Musica.ToList();
-    }
-
-    public override void Adicionar(Musica musica)
-    {
-        context.Musica.Add(musica);
-        context.SaveChanges();
-    }
-
-    public override void Deletar(Musica musica)
-    {
-        context.Musica.Remove(musica);
-        context.SaveChanges();
-    }
-
-    public override void Atualizar(Musica musica)
-    {
-        context.Musica.Update(musica);
-        context.SaveChanges();
-    }
+    public MusicaDAL(ScreenSoundContext context) : base(context) { }
 }
