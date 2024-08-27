@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScreenSound.Banco;
 
-internal class MusicaDAL
+internal class MusicaDAL : DAL<Musica>
 {
     private readonly ScreenSoundContext context;
 
@@ -16,20 +16,26 @@ internal class MusicaDAL
         this.context = context;
     }
 
-    public IEnumerable<Musica> Listar()
+    public override IEnumerable<Musica> Listar()
     {
         return context.Musica.ToList();
     }
 
-    public void Adicionar(Musica musica)
+    public override void Adicionar(Musica musica)
     {
         context.Musica.Add(musica);
         context.SaveChanges();
     }
 
-    public void Deletar(Musica musica)
+    public override void Deletar(Musica musica)
     {
         context.Musica.Remove(musica);
+        context.SaveChanges();
+    }
+
+    public override void Atualizar(Musica musica)
+    {
+        context.Musica.Update(musica);
         context.SaveChanges();
     }
 }
