@@ -11,8 +11,10 @@ internal class DAL <T> where T : class
 {
     protected readonly ScreenSoundContext context;
 
-    protected DAL(ScreenSoundContext context)
-        { this.context = context; }
+    public DAL(ScreenSoundContext context)
+    {
+        this.context = context;
+    }
     public IEnumerable<T> Listar()
     {
         return context.Set<T>().ToList();
